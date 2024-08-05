@@ -1,98 +1,100 @@
-<?php
-
-// Demand a GET parameter
-if ( ! isset($_GET['name']) || strlen($_GET['name']) < 1  ) {
-    die('Name parameter missing');
-}
-
-// If the user requested logout go back to index.php
-if ( isset($_POST['logout']) ) {
-    header('Location: index.php');
-    return;
-}
-
-// Set up the values for the game...
-// 0 is Rock, 1 is Paper, and 2 is Scissors
-$names = array('Rock', 'Paper', 'Scissors');
-$human = isset($_POST["human"]) ? $_POST['human']+0 : -1;
-
-$computer = rand(0,2); // Hard code the computer to rock
-// TODO: Make the computer be random
-// $computer = rand(0,2);
-
-// This function takes as its input the computer and human play
-// and returns "Tie", "You Lose", "You Win" depending on play
-// where "You" is the human being addressed by the computer
-function check($computer, $human) {
-    // For now this is a rock-savant checking function
-    // TODO: Fix this
-    if ( $human == $computer ) {
-        return "Tie";
-    } else if ( $human == 1 AND $computer == 0 ){
-        return "You Win";
-    } else if ( $human == 2 AND $computer == 1 ){
-        return "You Win";
-    } else if ( $human == 0 AND $computer == 2 ){
-    	return "You Win";
-    } else if ( $human == 2  and $computer == 0 ) {
-        return "You Lose";
-    } else if ( $human == 1  and $computer == 2) {
-        return "You Lose";
-    } else if ( $human == 0  and $computer == 1 ) {
-        return "You Lose";
-    }
-    
-    return false;
-}
-
-// Check to see how the play happenned
-$result = check($computer, $human);
-
-?>
-<!DOCTYPE html>
-<html>
 <head>
-<title>ANSHUL AGRAWAL</title>
-<?php require_once "bootstrap.php"; ?>
+  <title>Mini Game</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-<div class="container">
-<h1>Rock Paper Scissors</h1>
-<?php
-if ( isset($_REQUEST['name']) ) {
-    echo "<p>Welcome: ";
-    echo htmlentities($_REQUEST['name']);
-    echo "</p>\n";
-}
-?>
-<form method="post">
-<select name="human">
-<option value="-1">Select</option>
-<option value="0">Rock</option>
-<option value="1">Paper</option>
-<option value="2">Scissors</option>
-<option value="3">Test</option>
-</select>
-<input type="submit" value="Play">
-<input type="submit" name="logout" value="Logout">
-</form>
-
-<pre>
-<?php
-if ( $human == -1 ) {
-    print "Please select a strategy and press Play.\n";
-} else if ( $human == 3 ) {
-    for($c=0;$c<3;$c++) {
-        for($h=0;$h<3;$h++) {
-            $r = check($c, $h);
-            print "Human=$names[$h] Computer=$names[$c] Result=$r\n";
-        }
-    }
-} else {
-    print "Your Play=$names[$human] Computer Play=$names[$computer] Result=$result\n";
-}
-?>
-</pre>
+  <h1>Rock | Paper | Scissors</h1>
+  <p>Play the game with your Computer</p> 
 </div>
-</body>
-</html>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <form method="post">
+                <label for="">Choose Your Weapen</label>
+                <select name="game" id="" class="form-control" title="Please Choose Your Weapen" required>
+                    <option value="0">Choose any one</option>
+                    <option value="R"> Rock</option>
+                    <option value="P">Paper</option>
+                    <option value="S">Scissors</option>
+                </select><br/>
+                <input class="btn btn-success" type="submit" name="sb" value="To Beat">
+            </form>
+        </div>
+    </div>
+</div>
+<?php
+if(isset($_POST['sb']) && $_POST['game']!='0')
+{
+
+function sortgame($comp,$you)
+{
+    //Draw Game
+    if($comp==$you)
+    {
+        return 0;
+    }
+
+    //Cases
+    if($you=='R' && $comp=='P')
+    {
+        return 1;
+    }
+    elseif($you=='P' && $comp=='R')
+    {
+        return -1;
+    }
+
+    if($you=='R' && $comp=='S')
+    {
+        return 1;
+    }
+    elseif($you=='S' && $comp=='R')
+    {
+        return -1;
+    }
+
+    if($you=='P' && $comp=='S')
+    {
+        return -1;
+    }
+    elseif($you=='S' && $comp=='P')
+    {
+        return 1;
+    }
+    
+}
+
+$str = 'PRS';
+$shuffled = str_shuffle($str);
+
+$result = sortgame(substr($shuffled,'0','1'),$_POST['game']);
+
+$winner = '';
+
+if($result==0)
+{
+    $winner = "You Choose ".$_POST['game']." and Computer Choose ".substr($shuffled,'0','1')." Game Draw!";
+?>
+<?php
+}
+elseif($result==1)
+{
+    $winner = "You Choose ".$_POST['game']." and Computer Choose ".substr($shuffled,'0','1')." You Won!";
+?>
+<?php
+}
+else
+{
+    $winner = "You Choose ".$_POST['game']." and Computer Choose ".substr($shuffled,'0','1')." Computer Won!";
+?>
+<?php
+}
+
+echo "<center><strong class='alert alert-success'>".$winner."</strong></center><br/><br><br>";
+}
+else
+{
+    echo "<center><strong class='alert alert-success'>Please Choose Your Weapen....</strong></center>";
+}
+?>
