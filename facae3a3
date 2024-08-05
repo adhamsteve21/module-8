@@ -2,7 +2,7 @@
   <title>Mini Game</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<a href="login.php">login</a>
+<a href="login.php">Please Log In</a>
 </head>
 <body>
   <h1>Rock | Paper | Scissors</h1>
